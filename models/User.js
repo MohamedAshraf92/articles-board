@@ -1,6 +1,6 @@
-import { Schema, SchemaTypes, model } from "mongoose";
+const { Schema, SchemaTypes, model } = require("mongoose");
 
-import { preSaveUser } from "../helpers/userHelpers";
+const { preSaveUser } = require("../helpers/userHelpers");
 
 const userSchema = new Schema(
   {
@@ -34,4 +34,4 @@ userSchema.virtual("articles", {
 
 userSchema.pre("save", preSaveUser);
 
-export default model("User", userSchema);
+module.exports = model("User", userSchema);

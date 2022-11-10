@@ -1,10 +1,10 @@
-import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
-import User from "../models/User";
-import CustomError from "./customError";
+const User = require("../models/User.js");
+const CustomError = require("./customError.js");
 
-export const isUserExist = async (email) => {
+const isUserExist = async (email) => {
   const registeredEmail = await User.exists({ email });
   if (registeredEmail) {
     const error = new CustomError(
@@ -16,7 +16,7 @@ export const isUserExist = async (email) => {
   }
 };
 
-export const authinticateUser = async (email, password) => {
+const authinticateUser = async (email, password) => {
   const user = await User.findOne({ email: email });
   if (!user) {
     const error = new CustomError(
@@ -38,7 +38,7 @@ export const authinticateUser = async (email, password) => {
   return user;
 };
 
-export const generateJWT = (email, userId) => {
+const generateJWT = (email, userId) => {
   const token = jwt.sign(
     {
       email,
@@ -50,8 +50,15 @@ export const generateJWT = (email, userId) => {
   return token;
 };
 
-export async function preSaveUser(next) {
+async function preSaveUser(next) {
   const hashedPW = await bcrypt.hash(this.password, 12);
   this.password = hashedPW;
   next();
 }
+
+module.exports = {
+  isUserExist,
+  authinticateUser,
+  generateJWT,
+  preSaveUser,
+};
