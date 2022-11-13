@@ -17,7 +17,7 @@ const isUserExist = async (email) => {
 };
 
 const authinticateUser = async (email, password) => {
-  const user = await User.findOne({ email: email });
+  const user = await User.findOne({ email: email }).populate("articles");
   if (!user) {
     const error = new CustomError(
       401,

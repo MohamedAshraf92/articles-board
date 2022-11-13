@@ -25,7 +25,6 @@ const userResolver = {
         lastName: currentUser.lastName,
         articles: currentUser.articles,
       };
-      console.log({ userArticles: currentUser.articles });
       return { token, user: sentUser };
     },
   },
