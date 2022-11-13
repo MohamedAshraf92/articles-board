@@ -23,8 +23,13 @@ const User = gql`
     name: String
   }
 
+  type LoggedUser {
+    token: String
+    user: User
+  }
+
   type Query {
-    getUser: String
+    getUsers: [User]
   }
 
   input NewUserData {
@@ -34,8 +39,14 @@ const User = gql`
     password: String!
   }
 
+  input LoginData {
+    email: String!
+    password: String!
+  }
+
   type Mutation {
-    createUser(newUser: NewUserData): String
+    createUser(newUser: NewUserData): User
+    login(loginData: LoginData): LoggedUser
   }
 `;
 

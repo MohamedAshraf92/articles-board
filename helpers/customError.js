@@ -1,4 +1,4 @@
-export default class CustomError extends Error {
+class CustomError extends Error {
   constructor(
     statusCode = 500,
     name = "ERROR",
@@ -10,3 +10,5 @@ export default class CustomError extends Error {
     this.message = message;
   }
 }
+
+module.exports = CustomError;

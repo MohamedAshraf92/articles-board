@@ -1,6 +1,5 @@
-const { Schema, SchemaTypes, model } = require("mongoose");
-
-const { preSaveUser } = require("../helpers/userHelpers");
+const { Schema, model } = require("mongoose");
+const bcrypt = require("bcryptjs");
 
 const userSchema = new Schema(
   {
@@ -15,6 +14,7 @@ const userSchema = new Schema(
     email: {
       type: String,
       required: true,
+      unique: true,
     },
     password: {
       type: String,
@@ -28,10 +28,17 @@ const userSchema = new Schema(
 
 userSchema.virtual("articles", {
   ref: "Article",
-  localField: "_id",
   foreignField: "author",
+  localField: "_id",
 });
 
-userSchema.pre("save", preSaveUser);
+// userSchema.pre("save", preSaveUser);
+// userSchema.pre("save", (next) => preSaveUser(next));
+
+userSchema.pre("save", async function (next) {
+  const hashedPW = await bcrypt.hash(this.password, 12);
+  this.password = hashedPW;
+  next();
+});
 
 module.exports = model("User", userSchema);

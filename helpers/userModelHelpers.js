@@ -50,15 +50,8 @@ const generateJWT = (email, userId) => {
   return token;
 };
 
-async function preSaveUser(next) {
-  const hashedPW = await bcrypt.hash(this.password, 12);
-  this.password = hashedPW;
-  next();
-}
-
 module.exports = {
   isUserExist,
   authinticateUser,
   generateJWT,
-  preSaveUser,
 };
