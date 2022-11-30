@@ -1,8 +1,10 @@
+const { getCurrentUser } = require("../../helpers/userModelHelpers");
 const Article = require("../../models/Article");
 
 const articleResolver = {
   Query: {
-    getArticles: async () => {
+    getAllArticles: async (root, args, ctx) => {
+      const user = await getCurrentUser(ctx.authHeader);
       const articles = await Article.find().populate(["author", "category"]);
       return articles;
     },
@@ -10,8 +12,6 @@ const articleResolver = {
   Mutation: {
     addArticle: async (root, { newArticle }) => {
       const createdArticle = await Article.create(newArticle);
-      console.log({ newArticle });
-      console.log({ createdArticle });
       return createdArticle;
     },
   },

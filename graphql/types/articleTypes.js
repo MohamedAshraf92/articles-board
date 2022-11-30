@@ -24,7 +24,7 @@ const Articles = gql`
   }
 
   type Query {
-    getArticles: [Article]
+    getAllArticles: [Article]
   }
 
   input newArticle {

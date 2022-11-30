@@ -1,3 +1,4 @@
+const { ApolloError, AuthenticationError } = require("apollo-server-express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
@@ -17,7 +18,10 @@ const isUserExist = async (email) => {
 };
 
 const authinticateUser = async (email, password) => {
-  const user = await User.findOne({ email: email }).populate("articles");
+  const user = await User.findOne({ email: email }).populate({
+    path: "articles",
+    populate: { path: "category" },
+  });
   if (!user) {
     const error = new CustomError(
       401,
@@ -50,8 +54,22 @@ const generateJWT = (email, userId) => {
   return token;
 };
 
+const getCurrentUser = async (authHeader) => {
+  if (!authHeader)
+    throw new ApolloError("There is no auth header!", "Unauthorized");
+  const token = authHeader.split(" ")[1];
+  if (!token) throw new ApolloError("User must provide token", "Unauthorized");
+  const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+  if (!decodedToken) throw new ApolloError("Invalid Token!", "Unauthorized");
+  const currentUser = await User.findById(decodedToken.userId);
+  console.log({ currentUser });
+  if (!currentUser) throw new ApolloError("User is not found", "Unauthorized");
+  return currentUser;
+};
+
 module.exports = {
   isUserExist,
   authinticateUser,
   generateJWT,
+  getCurrentUser,
 };
