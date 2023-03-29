@@ -4,8 +4,11 @@ const Article = require("../../models/Article");
 const articleResolver = {
   Query: {
     getAllArticles: async (root, args, ctx) => {
-      const user = await getCurrentUser(ctx.authHeader);
-      const articles = await Article.find().populate(["author", "category"]);
+      const currentUser = await getCurrentUser(ctx.authHeader);
+      const articles = await Article.find({ author: currentUser.id }).populate([
+        "author",
+        "category",
+      ]);
       return articles;
     },
   },

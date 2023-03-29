@@ -6,8 +6,7 @@ const Category = require("../../models/Category");
 const categoryResolver = {
   Query: {
     getCategories: async (root, args, ctx) => {
-      const user = await getCurrentUser(ctx.authHeader);
-
+      const currentUser = await getCurrentUser(ctx.authHeader);
       const categories = await Category.find();
       return categories;
     },

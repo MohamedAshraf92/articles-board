@@ -62,7 +62,6 @@ const getCurrentUser = async (authHeader) => {
   const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
   if (!decodedToken) throw new ApolloError("Invalid Token!", "Unauthorized");
   const currentUser = await User.findById(decodedToken.userId);
-  console.log({ currentUser });
   if (!currentUser) throw new ApolloError("User is not found", "Unauthorized");
   return currentUser;
 };
